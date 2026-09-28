@@ -68,7 +68,7 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
           className="w-full h-full object-cover opacity-72 scale-105"
           style={{ filter: 'brightness(0.75) contrast(1.2) saturate(1.25)' }}
         >
-          <source src="/backgrounds/neural-noise.mp4" type="video/mp4" />
+          <source src={`${import.meta.env.BASE_URL}backgrounds/neural-noise.mp4`} type="video/mp4" />
           <source src="https://cloud.motion.page/downloads/backgrounds/neural-noise.mp4" type="video/mp4" />
         </video>
 
