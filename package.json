@@ -10,7 +10,9 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@google/genai": "^2.29.0",
     "@supabase/supabase-js": "^2.111.0",
+    "isomorphic-git": "^1.44.2",
     "lucide-react": "^1.28.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
