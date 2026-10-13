@@ -1,7 +1,8 @@
-import { X, Heart, Share2, GitCompare, FileText, Mail, Trash2, ExternalLink, Check } from 'lucide-react';
+import { X, Heart, Share2, GitCompare, FileText, Mail, Trash2, ExternalLink, Check, Sparkles } from 'lucide-react';
 import { useApp } from '@/store';
 import { getBestPrice, searchUrl } from '@/engine';
 import { MatchRing, Badge } from '@/ui';
+import { GeminiVibeCheck } from './GeminiVibeCheck';
 import { useState } from 'react';
 
 export function WishlistDrawer() {
@@ -97,6 +98,10 @@ export function WishlistDrawer() {
               </div>
             );
           })}
+
+          {wishlist.length > 0 && (
+            <GeminiVibeCheck products={wishlist} compact />
+          )}
 
           {/* compare view */}
           {compareMode && compareItems.length >= 2 && (
