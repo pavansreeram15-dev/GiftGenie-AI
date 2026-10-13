@@ -2,12 +2,15 @@ import { useState } from 'react';
 import {
   ArrowLeft, RotateCcw, SlidersHorizontal, Dice5, TrendingUp, Heart, ExternalLink,
   ThumbsUp, ThumbsDown, Sparkles, MessageSquareHeart, Lightbulb, Truck, Gift,
-  Check, ChevronDown, Zap, Star, Crown, Gem
+  Check, ChevronDown, Zap, Star, Crown, Gem, Brain
 } from 'lucide-react';
-import type { Recommendation, SortOption } from '@/types';
+import type { Recommendation, SortOption, GiftProduct } from '@/types';
 import { useApp } from '@/store';
 import { sortRecommendations, getBestPrice, getStorePrice, surpriseMe, searchUrl } from '@/engine';
 import { MatchRing, Meter, Stars, Badge, fireConfetti } from '@/ui';
+import { GeminiVibeCheck } from './GeminiVibeCheck';
+import { GeminiCardModal } from './GeminiCardModal';
+import { GeminiBreakdownModal } from './GeminiBreakdownModal';
 
 const SORTS: SortOption[] = [
   'Highest Match','Lowest Price','Trending','Luxury','Most Unique','Fast Delivery','Highest Rated','Best Value',
@@ -29,6 +32,8 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
   const [sort, setSort] = useState<SortOption>('Highest Match');
   const [visible, setVisible] = useState<Recommendation[]>(sortRecommendations(recs, sort));
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [activeCardProduct, setActiveCardProduct] = useState<GiftProduct | null>(null);
+  const [activeBreakdownProduct, setActiveBreakdownProduct] = useState<GiftProduct | null>(null);
 
   const handleSort = (s: SortOption) => {
     setSort(s);
@@ -121,7 +126,7 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
         </div>
 
         {/* ── Sort bar ── */}
-        <div className="glass rounded-2xl p-3 mb-10 flex items-center gap-2 overflow-x-auto">
+        <div className="glass rounded-2xl p-3 mb-6 flex items-center gap-2 overflow-x-auto">
           <SlidersHorizontal className="w-4 h-4 text-muted-c shrink-0 ml-1" />
           {SORTS.map((s) => (
             <button
@@ -136,12 +141,23 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
           ))}
         </div>
 
+        {/* ── Gemini AI Vibe Check Banner ── */}
+        <GeminiVibeCheck products={visible} />
+
         {/* ── Perfect Matches ── */}
         {perfectMatches.length > 0 && (
           <ResultSection label="PERFECT MATCHES" icon={<Sparkles className="w-4 h-4 text-warm-500" />} color="from-warm-500/10">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {perfectMatches.map((rec, i) => (
-                <RecCard key={rec.id} rec={rec} delay={i * 60} expanded={expanded === rec.id} onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)} />
+                <RecCard
+                  key={rec.id}
+                  rec={rec}
+                  delay={i * 60}
+                  expanded={expanded === rec.id}
+                  onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)}
+                  onOpenCard={setActiveCardProduct}
+                  onOpenBreakdown={setActiveBreakdownProduct}
+                />
               ))}
             </div>
           </ResultSection>
@@ -152,7 +168,15 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
           <ResultSection label="SMART ALTERNATIVES" icon={<Zap className="w-4 h-4 text-accent-500" />} color="from-accent-500/10">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {smartAlternatives.map((rec, i) => (
-                <RecCard key={rec.id} rec={rec} delay={i * 60} expanded={expanded === rec.id} onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)} />
+                <RecCard
+                  key={rec.id}
+                  rec={rec}
+                  delay={i * 60}
+                  expanded={expanded === rec.id}
+                  onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)}
+                  onOpenCard={setActiveCardProduct}
+                  onOpenBreakdown={setActiveBreakdownProduct}
+                />
               ))}
             </div>
           </ResultSection>
@@ -163,7 +187,15 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
           <ResultSection label="MORE OPTIONS" icon={<TrendingUp className="w-4 h-4 text-primary-500" />} color="from-primary-500/10">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {moreOptions.map((rec, i) => (
-                <RecCard key={rec.id} rec={rec} delay={i * 60} expanded={expanded === rec.id} onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)} />
+                <RecCard
+                  key={rec.id}
+                  rec={rec}
+                  delay={i * 60}
+                  expanded={expanded === rec.id}
+                  onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)}
+                  onOpenCard={setActiveCardProduct}
+                  onOpenBreakdown={setActiveBreakdownProduct}
+                />
               ))}
             </div>
           </ResultSection>
@@ -175,7 +207,15 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
             <p className="text-xs text-secondary-c mb-4">Thoughtful alternatives based on their age and occasion:</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {nonMatchingGifts.slice(0, 3).map((rec, i) => (
-                <RecCard key={rec.id} rec={rec} delay={i * 60} expanded={expanded === rec.id} onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)} />
+                <RecCard
+                  key={rec.id}
+                  rec={rec}
+                  delay={i * 60}
+                  expanded={expanded === rec.id}
+                  onExpand={() => setExpanded(expanded === rec.id ? null : rec.id)}
+                  onOpenCard={setActiveCardProduct}
+                  onOpenBreakdown={setActiveBreakdownProduct}
+                />
               ))}
             </div>
           </ResultSection>
@@ -189,6 +229,18 @@ export function Results({ recs, onRestart, onBack }: { recs: Recommendation[]; o
           </div>
         )}
       </div>
+
+      {/* ── Gemini AI Modals ── */}
+      <GeminiCardModal
+        product={activeCardProduct}
+        isOpen={Boolean(activeCardProduct)}
+        onClose={() => setActiveCardProduct(null)}
+      />
+      <GeminiBreakdownModal
+        product={activeBreakdownProduct}
+        isOpen={Boolean(activeBreakdownProduct)}
+        onClose={() => setActiveBreakdownProduct(null)}
+      />
     </div>
   );
 }
@@ -207,8 +259,20 @@ function ResultSection({ label, icon, color, children }: {
   );
 }
 
-function RecCard({ rec, delay, expanded, onExpand }: {
-  rec: Recommendation; delay: number; expanded: boolean; onExpand: () => void;
+function RecCard({
+  rec,
+  delay,
+  expanded,
+  onExpand,
+  onOpenCard,
+  onOpenBreakdown,
+}: {
+  rec: Recommendation;
+  delay: number;
+  expanded: boolean;
+  onExpand: () => void;
+  onOpenCard: (g: GiftProduct) => void;
+  onOpenBreakdown: (g: GiftProduct) => void;
 }) {
   const { inWishlist, toggleWishlist } = useApp();
   const saved = inWishlist(rec.id);
@@ -406,8 +470,30 @@ function RecCard({ rec, delay, expanded, onExpand }: {
           </div>
         )}
 
+        {/* Gemini AI Action Chips */}
+        <div className="grid grid-cols-2 gap-2 mb-3 mt-auto">
+          <button
+            type="button"
+            onClick={() => onOpenCard(rec)}
+            className="inline-flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl text-[11px] font-bold text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 transition cursor-pointer shadow-sm active:scale-95"
+            title="Generate personalized greeting card note with Gemini"
+          >
+            <Sparkles className="w-3 h-3 text-rose-400" />
+            <span>AI Card Note</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenBreakdown(rec)}
+            className="inline-flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl text-[11px] font-bold text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/25 transition cursor-pointer shadow-sm active:scale-95"
+            title="Deep psychological fit & unboxing ritual with Gemini"
+          >
+            <Brain className="w-3 h-3 text-indigo-400" />
+            <span>Gemini Dossier</span>
+          </button>
+        </div>
+
         {/* Actions */}
-        <div className="flex gap-2 mt-auto">
+        <div className="flex gap-2">
           <button
             onClick={onExpand}
             className="text-xs font-bold text-primary-c px-3 py-2.5 rounded-xl glass-soft hover:scale-[1.02] transition flex items-center gap-1"
