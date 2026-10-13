@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from 'react';
 import { Sparkles, ArrowRight, TrendingUp, ExternalLink, Zap, Gift, Brain, Star } from 'lucide-react';
 import { searchUrl } from '@/engine';
 import { partnerBrands, testimonials } from '@/data';
+import { GeminiMagicPrompt } from './GeminiMagicPrompt';
+import type { Recommendation } from '@/types';
 
 /* ─── Real SVG brand logos ───────────────────────────── */
 
@@ -461,7 +463,15 @@ function HeroCardItem({ card }: { card: HeroCardData }) {
 
 /* ─── Hero Main Component ────────────────────────────── */
 
-export function Hero({ onStart, onTrending }: { onStart: () => void; onTrending: () => void }) {
+export function Hero({
+  onStart,
+  onTrending,
+  onDirectComplete,
+}: {
+  onStart: () => void;
+  onTrending: () => void;
+  onDirectComplete?: (recs: Recommendation[]) => void;
+}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const [tilt, setTilt] = useState({ rx: 6, ry: -2 });
@@ -683,6 +693,12 @@ export function Hero({ onStart, onTrending }: { onStart: () => void; onTrending:
             Explore Trending Ideas
           </button>
         </div>
+
+        {/* ─── Gemini AI Magic Freeform Prompt Bar ─── */}
+        <GeminiMagicPrompt
+          onDirectComplete={onDirectComplete}
+          onOpenWizard={onStart}
+        />
 
         {/* Store Trust / Comparison Bar */}
         <div
