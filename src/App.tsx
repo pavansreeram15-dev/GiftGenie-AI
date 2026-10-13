@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { AppProvider } from '@/store';
+import { AppProvider, useApp } from '@/store';
 import { Navbar } from '@/components/Navbar';
 import { Hero, HowItWorks, Testimonials } from '@/components/Home';
 import { Trending } from '@/components/Trending';
@@ -7,6 +7,7 @@ import { Wizard, ProcessingScreen } from '@/components/Wizard';
 import { Results } from '@/components/Results';
 import { WishlistDrawer } from '@/components/Wishlist';
 import { Chatbot } from '@/components/Chatbot';
+import { GeminiSettingsModal } from '@/components/GeminiSettingsModal';
 import { Gift, Sparkles, Heart } from 'lucide-react';
 import type { Recommendation } from '@/types';
 
@@ -15,6 +16,7 @@ type View = 'home' | 'wizard' | 'processing' | 'results';
 function AppShell() {
   const [view, setView] = useState<View>('home');
   const [recs, setRecs] = useState<Recommendation[]>([]);
+  const { openGeminiSettings, setOpenGeminiSettings } = useApp();
 
   const startWizard = useCallback(() => setView('wizard'), []);
   const goToTrending = useCallback(() => {
@@ -27,6 +29,11 @@ function AppShell() {
     setView('processing');
   }, []);
 
+  const handleDirectMatches = useCallback((r: Recommendation[]) => {
+    setRecs(r);
+    setView('results');
+  }, []);
+
   const handleProcessed = useCallback(() => setView('results'), []);
 
   return (
@@ -37,7 +44,7 @@ function AppShell() {
 
       {view === 'home' && (
         <>
-          <Hero onStart={startWizard} onTrending={goToTrending} />
+          <Hero onStart={startWizard} onTrending={goToTrending} onDirectComplete={handleDirectMatches} />
           <HowItWorks onStart={startWizard} />
           <Trending />
           <Testimonials />
@@ -59,6 +66,10 @@ function AppShell() {
 
       <WishlistDrawer />
       <Chatbot />
+      <GeminiSettingsModal
+        isOpen={openGeminiSettings}
+        onClose={() => setOpenGeminiSettings(false)}
+      />
     </div>
   );
 }
