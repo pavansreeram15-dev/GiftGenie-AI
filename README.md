@@ -23,9 +23,13 @@ GiftGenie AI is a state-of-the-art, cinematic AI shopping and gift recommendatio
   - Specular stardust particles with 4-point lens flare cross-glints.
   - Smooth 60-frame color lerping that reacts in real-time to user selections.
 - **⚡ Neural Noise Video Results Canvas**: Cinematic high-definition looping video background with subtle luxury grading.
-- **🎯 Verified 75-Product Catalog**: Strictly calibrated interest matching across Indian eCommerce platforms.
-
----
+- **🤖 Google Gemini AI Engine & Generative Features**:
+  - **Gemini Magic Prompt**: Freeform natural language parser that analyzes plain-English recipient descriptions, extracts relationship, occasion, passions, budget, and generates personalized recommendations in 1 click.
+  - **Conversational Concierge**: Multi-turn intelligent chat assistant powered by Google Gemini (Gemini 2.5 Flash, 1.5 Flash, 2.0 Flash, 1.5 Pro) with live catalog context.
+  - **AI Greeting Card Generator**: Bespoke handwritten-style gift notes in Heartfelt, Witty, Poetic, Punchy, or Professional tones.
+  - **Gemini Psychological Dossier**: In-depth psychological breakdown on why the gift fits the recipient's mind, the ideal handover moment, and creative unboxing rituals.
+  - **Gift Basket Vibe Check & Roast/Toast**: Humorous roast, heartwarming toast, thoughtfulness score, and pro-gifter delivery tips.
+  - **In-App Gemini Settings & Testing Modal**: Real-time connection testing, latency feedback, and zero-setup local fallback simulation.
 
 ## 🚀 Getting Started
 
