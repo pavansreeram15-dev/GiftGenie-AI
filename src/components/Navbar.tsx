@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { Sparkles, Heart, MessageCircle, Gift, Menu, X } from 'lucide-react';
+import { Sparkles, Heart, MessageCircle, Gift, Menu, X, Cpu } from 'lucide-react';
 import { useApp } from '@/store';
+import { hasGeminiKey, getGeminiModel } from '@/gemini';
 
 export function Navbar({ onStart }: { onStart: () => void }) {
-  const { wishlist, setOpenWishlist, setOpenChat } = useApp();
+  const { wishlist, setOpenWishlist, setOpenChat, setOpenGeminiSettings } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const activeModel = getGeminiModel();
+  const configured = hasGeminiKey();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
@@ -29,6 +32,22 @@ export function Navbar({ onStart }: { onStart: () => void }) {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Gemini AI Status & Settings Button */}
+          <button
+            onClick={() => setOpenGeminiSettings(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl glass-soft border border-primary-500/30 hover:border-accent-400/50 text-xs font-bold text-primary-c transition cursor-pointer shadow-sm group"
+            title="Configure Google Gemini AI"
+            aria-label="Google Gemini AI Settings"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-accent-400 group-hover:rotate-12 transition-transform" />
+            <span className="hidden sm:inline font-display">Gemini AI</span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                configured ? 'bg-emerald-400 shadow-sm shadow-emerald-400/60' : 'bg-warm-400 animate-pulse'
+              }`}
+            />
+          </button>
+
           <button
             onClick={() => setOpenChat(true)}
             className="w-9 h-9 rounded-xl glass-soft flex items-center justify-center text-secondary-c hover:text-primary-c transition"
@@ -70,6 +89,16 @@ export function Navbar({ onStart }: { onStart: () => void }) {
           <a href="#how" onClick={() => setMobileOpen(false)} className="px-3 py-2.5 rounded-lg hover:bg-white/5 text-secondary-c text-sm font-medium transition">How it works</a>
           <a href="#trending" onClick={() => setMobileOpen(false)} className="px-3 py-2.5 rounded-lg hover:bg-white/5 text-secondary-c text-sm font-medium transition">Trending</a>
           <a href="#testimonials" onClick={() => setMobileOpen(false)} className="px-3 py-2.5 rounded-lg hover:bg-white/5 text-secondary-c text-sm font-medium transition">Reviews</a>
+          <button
+            onClick={() => { setOpenGeminiSettings(true); setMobileOpen(false); }}
+            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl glass-soft text-xs font-bold text-primary-c border border-primary-500/25"
+          >
+            <span className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-accent-400" />
+              <span>Google Gemini AI Settings</span>
+            </span>
+            <span className={`w-2 h-2 rounded-full ${configured ? 'bg-emerald-400' : 'bg-warm-400'}`} />
+          </button>
           <button onClick={() => { onStart(); setMobileOpen(false); }} className="flex items-center justify-center gap-2 gradient-primary text-white font-bold py-3 rounded-xl mt-1 shadow-lg shadow-primary-500/25">
             <Sparkles className="w-4 h-4" /> Find My Gift
           </button>
