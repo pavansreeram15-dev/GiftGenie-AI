@@ -14,6 +14,8 @@ interface AppState {
   setOpenWishlist: (v: boolean) => void;
   openChat: boolean;
   setOpenChat: (v: boolean) => void;
+  openGeminiSettings: boolean;
+  setOpenGeminiSettings: (v: boolean) => void;
   form: WizardForm;
   setForm: React.Dispatch<React.SetStateAction<WizardForm>>;
 }
@@ -36,6 +38,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<Recommendation[]>([]);
   const [openWishlist, setOpenWishlist] = useState(false);
   const [openChat, setOpenChat] = useState(false);
+  const [openGeminiSettings, setOpenGeminiSettings] = useState(false);
   const [form, setForm] = useState<WizardForm>(defaultForm);
 
   useEffect(() => {
@@ -62,7 +65,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const clearWishlist = useCallback(() => setWishlist([]), []);
 
   return (
-    <AppContext.Provider value={{ theme, toggleTheme, wishlist, toggleWishlist, inWishlist, clearWishlist, openWishlist, setOpenWishlist, openChat, setOpenChat, form, setForm }}>
+    <AppContext.Provider value={{
+      theme,
+      toggleTheme,
+      wishlist,
+      toggleWishlist,
+      inWishlist,
+      clearWishlist,
+      openWishlist,
+      setOpenWishlist,
+      openChat,
+      setOpenChat,
+      openGeminiSettings,
+      setOpenGeminiSettings,
+      form,
+      setForm
+    }}>
       {children}
     </AppContext.Provider>
   );
